@@ -5,37 +5,36 @@
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
 Version:   2.3.2
-Release:   4%{?dist}
+Release:   15%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
 Group:     User Interface/X Hardware Support
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+Patch0:	    vesa-2.3.0-24bpp-sucks.patch
+Patch1:	    vesa-2.3.0-no-virt-shadowfb.patch
+Patch2:	    0001-Fix-check-function-in-VESASaveRestore.patch
+Patch3:	    0002-Remove-mibstore.h.patch
 ExcludeArch: s390 s390x
 
-BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
-#BuildRequires: autoconf automake libtool
+BuildRequires: xorg-x11-server-devel >= 1.10.99.902
+BuildRequires: autoconf automake libtool
 
-Requires:  Xorg %(xserver-sdk-abi-requires ansic)
-Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
-
-Patch0: vesa-refuse-kms.patch
-Patch1: vesa-avoid-24bpp.patch
-Patch2: vesa-2.3.0-no-virt-shadowfb.patch
+Requires: Xorg %([ -e /usr/bin/xserver-sdk-abi-requires ] && xserver-sdk-abi-requires ansic)
+Requires: Xorg %([ -e /usr/bin/xserver-sdk-abi-requires ] && xserver-sdk-abi-requires videodrv)
 
 %description 
 X.Org X11 vesa video driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
-
-%patch0 -p1 -b .nokms
-%patch1 -p1 -b .24bpp
-%patch2 -p1 -b .virt
+%patch0 -p1 -b .24
+%patch1 -p1 -b .virt
+%patch2 -p1
+%patch3 -p1
 
 %build
-#autoreconf -v --install || exit 1
+autoreconf -f -v --install || exit 1
 %configure --disable-static
 make
 
@@ -57,32 +56,107 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
-* Mon Sep 10 2012 Adam Jackson <ajax@redhat.com> 2.3.2-4
-- vesa-2.3.0-no-virt-shadowfb.patch: Don't bother with a shadowfb on known
-  virtual machine GPUs, it won't help. (#795686)
+* Mon Apr 28 2014 Adam Jackson <ajax@redhat.com> 2.3.2-15
+- 1.15 ABI rebuild
 
-* Tue Aug 29 2012 Jerome Glisse <jglisse@redhat.com> 2.3.2-3
-- Resolves: #835261
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.3.2-13
+- Mass rebuild 2013-12-27
 
-* Wed Aug 22 2012 airlied@redhat.com - 2.3.2-2
-- rebuild for server ABI requires
+* Wed Nov 06 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-12
+- 1.15RC1 ABI rebuild
 
-* Mon Aug 06 2012 Jerome Glisse <jglisse@redhat.com> 2.3.2-1
-- latest upstream release 2.3.2
+* Fri Oct 25 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-11
+- ABI rebuild
 
-* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 2.3.0-2
-- rebuild for 6.2 server rebase
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-* Tue Jun 01 2010 Adam Jackson <ajax@redhat.com> 2.3.0-1
-- vesa 2.3.0
-- vesa-avoid-24bpp.patch: Avoid 24bpp if 16bpp is available, ugly workaround
-  for an xserver crash with virt (#555221)
+* Thu Mar 07 2013 Dave Airlie <airlied@redhat.com> 2.3.2-9
+- autoreconf for aarch64
 
-* Thu May 13 2010 Ben Skeggs <bskeggs@redhat.com> 2.2.1-2
-- refuse to load if KMS driver is active
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.2-8
+- require xorg-x11-server-devel, not -sdk
 
-* Mon Nov 30 2009 Dennis Gregorovic <dgregor@redhat.com> - 2.2.1-1.1
-- Rebuilt for RHEL 6
+* Thu Mar 07 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.2-7
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.2-6
+- ABI rebuild
+
+* Fri Feb 15 2013 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.2-5
+- ABI rebuild
+
+* Thu Jan 10 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-4
+- ABI rebuild
+
+* Wed Aug 15 2012 Adam Jackson <ajax@redhat.com> 2.3.2-3
+- Only build on arches where xserver builds VBE support
+
+* Sun Jul 22 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 18 2012 Dave Airlie <airlied@redhat.com> 2.3.2-1
+- vesa 2.3.2
+
+* Thu Apr 26 2012 Adam Jackson <ajax@redhat.com> 2.3.1-1
+- vesa 2.3.1
+
+* Thu Apr 05 2012 Adam Jackson <ajax@redhat.com> - 2.3.0-16
+- RHEL arch exclude updates
+
+* Sat Feb 11 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-15
+- ABI rebuild
+
+* Fri Feb 10 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-14
+- ABI rebuild
+
+* Tue Jan 24 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-13
+- ABI rebuild
+
+* Wed Jan 04 2012 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-12
+- Rebuild for server 1.12
+
+* Mon Nov 14 2011 Adam Jackson <ajax@redhat.com> - 2.3.0-11
+- ABI rebuild
+
+* Thu Nov 10 2011 Adam Jackson <ajax@redhat.com> 2.3.0-10
+- vesa-2.3.0-git.patch: Sync with git for new ABI.
+
+* Thu Aug 18 2011 Adam Jackson <ajax@redhat.com> - 2.3.0-9
+- Rebuild for xserver 1.11 ABI
+
+* Wed May 11 2011 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-8
+- Rebuild for server 1.11
+
+* Mon Feb 28 2011 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-7
+- Rebuild for server 1.10
+
+* Mon Feb 21 2011 Adam Jackson <ajax@redhat.com> 2.3.0-6
+- vesa-2.3.0-no-virt-shadowfb.patch: Disable shadowfb on virt hardware, just
+  makes things slower.
+- vesa-2.3.0-kms-anathema.patch: Refuse to bind to devices with a kernel
+  driver.
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 02 2010 Peter Hutterer <peter.hutterer@redhat.com> - 2.3.0-4
+- Rebuild for server 1.10
+
+* Wed Oct 27 2010 Adam Jackson <ajax@redhat.com> 2.3.0-3
+- Add ABI requires magic (#542742)
+
+* Mon Oct 11 2010 Adam Jackson <ajax@redhat.com> 2.3.0-2
+- vesa-2.3.0-24bpp-sucks.patch: Prefer 16bpp to 24bpp. (#533879)
+
+* Mon Jul 05 2010 Dave Airlie <airlied@redhat.com> 2.3.0-1
+- pull in latest vesa
+
+* Mon Jul 05 2010 Peter Hutterer <peter.hutterer@redhat.com> - 2.2.1-3
+- rebuild for X Server 1.9
+
+* Thu Jan 21 2010 Peter Hutterer <peter.hutterer@redhat.com> - 2.2.1-2
+- Rebuild for server 1.8
 
 * Tue Aug 04 2009 Dave Airlie <airlied@redhat.com> 2.2.1-1
 - vesa 2.2.1
