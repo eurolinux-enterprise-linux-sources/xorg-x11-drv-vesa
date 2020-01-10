@@ -5,7 +5,7 @@
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
 Version:   2.3.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
@@ -17,7 +17,8 @@ ExcludeArch: s390 s390x
 BuildRequires: xorg-x11-server-sdk >= 1.4.99.1-0.15
 #BuildRequires: autoconf automake libtool
 
-Requires:  xorg-x11-server-Xorg >= 1.4.99.1
+Requires:  Xorg %(xserver-sdk-abi-requires ansic)
+Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
 
 Patch0: vesa-refuse-kms.patch
 Patch1: vesa-avoid-24bpp.patch
@@ -54,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 2.3.0-2
+- rebuild for 6.2 server rebase
+
 * Tue Jun 01 2010 Adam Jackson <ajax@redhat.com> 2.3.0-1
 - vesa 2.3.0
 - vesa-avoid-24bpp.patch: Avoid 24bpp if 16bpp is available, ugly workaround
