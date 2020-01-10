@@ -4,8 +4,8 @@
 
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
-Version:   2.3.0
-Release:   2%{?dist}
+Version:   2.3.2
+Release:   4%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
@@ -14,7 +14,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ExcludeArch: s390 s390x
 
-BuildRequires: xorg-x11-server-sdk >= 1.4.99.1-0.15
+BuildRequires: xorg-x11-server-sdk >= 1.10.99.902
 #BuildRequires: autoconf automake libtool
 
 Requires:  Xorg %(xserver-sdk-abi-requires ansic)
@@ -22,6 +22,7 @@ Requires:  Xorg %(xserver-sdk-abi-requires videodrv)
 
 Patch0: vesa-refuse-kms.patch
 Patch1: vesa-avoid-24bpp.patch
+Patch2: vesa-2.3.0-no-virt-shadowfb.patch
 
 %description 
 X.Org X11 vesa video driver.
@@ -31,6 +32,7 @@ X.Org X11 vesa video driver.
 
 %patch0 -p1 -b .nokms
 %patch1 -p1 -b .24bpp
+%patch2 -p1 -b .virt
 
 %build
 #autoreconf -v --install || exit 1
@@ -55,6 +57,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Mon Sep 10 2012 Adam Jackson <ajax@redhat.com> 2.3.2-4
+- vesa-2.3.0-no-virt-shadowfb.patch: Don't bother with a shadowfb on known
+  virtual machine GPUs, it won't help. (#795686)
+
+* Tue Aug 29 2012 Jerome Glisse <jglisse@redhat.com> 2.3.2-3
+- Resolves: #835261
+
+* Wed Aug 22 2012 airlied@redhat.com - 2.3.2-2
+- rebuild for server ABI requires
+
+* Mon Aug 06 2012 Jerome Glisse <jglisse@redhat.com> 2.3.2-1
+- latest upstream release 2.3.2
+
 * Tue Jun 28 2011 Ben Skeggs <bskeggs@redhat.com> - 2.3.0-2
 - rebuild for 6.2 server rebase
 
