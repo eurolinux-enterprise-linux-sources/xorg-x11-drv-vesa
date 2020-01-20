@@ -6,17 +6,14 @@
 
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
-Version:   2.3.2
-Release:   25.1%{?dist}
-URL:       http://www.x.org
-Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
+Version:   2.4.0
+Release:   1%{?dist}
+URL:       https://www.x.org
+Source0:   https://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
 Group:     User Interface/X Hardware Support
 
-Patch0:	    vesa-2.3.0-24bpp-sucks.patch
-Patch1:	    vesa-2.3.0-no-virt-shadowfb.patch
-Patch2:	    0001-Fix-check-function-in-VESASaveRestore.patch
-Patch3:	    0002-Remove-mibstore.h.patch
+Patch0: 0001-Disable-shadow-by-default-on-known-virtual-GPUs.patch
 ExclusiveArch: %{ix86} x86_64
 
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
@@ -29,14 +26,10 @@ Requires: Xorg %([ -e /usr/bin/xserver-sdk-abi-requires ] && xserver-sdk-abi-req
 X.Org X11 vesa video driver.
 
 %prep
-%setup -q -n %{tarball}-%{version}
-%patch0 -p1 -b .24
-%patch1 -p1 -b .virt
-%patch2 -p1
-%patch3 -p1
+%autosetup -p1 -n %{tarball}-%{version}
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -f -v --install || exit 1
 %configure --disable-static
 make
 
@@ -57,6 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Wed May 30 2018 Adam Jackson <ajax@redhat.com> - 2.4.0-1
+- vesa 2.4.0
+
+* Wed May 30 2018 Adam Jackson <ajax@redhat.com> - 2.3.2-25.1.1
+- Rebuild for xserver 1.20
+
 * Mon Feb 06 2017 Adam Jackson <ajax@redhat.com> - 2.3.2-25.1
 - Fix Requires for RHEL
 
