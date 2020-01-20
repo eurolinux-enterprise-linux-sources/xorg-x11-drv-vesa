@@ -7,13 +7,15 @@
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
 Version:   2.4.0
-Release:   1%{?dist}
+Release:   3%{?dist}
 URL:       https://www.x.org
 Source0:   https://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
 Group:     User Interface/X Hardware Support
 
 Patch0: 0001-Disable-shadow-by-default-on-known-virtual-GPUs.patch
+Patch1: 0001-Refuse-to-run-on-UEFI-machines.patch
+Patch2: 0001-Refuse-to-run-on-UEFI-machines-running-older-kernels.patch
 ExclusiveArch: %{ix86} x86_64
 
 BuildRequires: xorg-x11-server-devel >= 1.10.99.902
@@ -50,6 +52,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Fri May 10 2019 Benjamin Tissoires <benjamin.tissoires@redhat.com> 2.4.0-3
+- Refuse to run on UEFI framebuffers for v3.10 kernels too
+
+* Fri Mar 01 2019 Adam Jackson <ajax@redhat.com> - 2.4.0-2
+- Refuse to run on UEFI framebuffers
+
 * Wed May 30 2018 Adam Jackson <ajax@redhat.com> - 2.4.0-1
 - vesa 2.4.0
 

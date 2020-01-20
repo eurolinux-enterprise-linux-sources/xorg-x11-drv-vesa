@@ -1,0 +1,37 @@
+From 53c7796e8ddc6aaaef79df8c852c0d9d151a8559 Mon Sep 17 00:00:00 2001
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Fri, 10 May 2019 08:40:05 +0200
+Subject: [PATCH] Refuse to run on UEFI machines running older kernels
+
+Prior to kernel v3.12, the efi framebuffer driver was named "efifb".
+This cause problem on RHEL 7 as the base kernel is 3.10.
+
+"efi-framebuffer.0" was added by commit 2645e0aa for that reason
+(don't run on UEFI machine).
+The change from "efifb" to "efi-framebuffer" was done with commit
+e6816a8 in the kernel
+
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+[ofourdan: updated commit message with commit references]
+Reviewed-by: Olivier Fourdan <ofourdan@redhat.com>
+---
+ src/vesa.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/vesa.c b/src/vesa.c
+index 7f11175..0c1d003 100644
+--- a/src/vesa.c
++++ b/src/vesa.c
+@@ -452,7 +452,8 @@ VESAPciProbe(DriverPtr drv, int entity_num, struct pci_device *dev,
+     ScrnInfoPtr pScrn;
+ 
+ #ifdef __linux__
+-    if (access("/sys/devices/platform/efi-framebuffer.0", F_OK) == 0) {
++    if (access("/sys/devices/platform/efi-framebuffer.0", F_OK) == 0 ||
++        access("/sys/devices/platform/efifb.0", F_OK) == 0) {
+         ErrorF("vesa: Refusing to run on UEFI\n");
+         return FALSE;
+     }
+-- 
+2.21.0
+
