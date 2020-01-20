@@ -5,7 +5,7 @@
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
 Version:   2.3.2
-Release:   14%{?dist}
+Release:   20%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
@@ -56,11 +56,29 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
-* Wed Jan 15 2014 Adam Jackson <ajax@redhat.com> - 2.3.2-14
+* Wed Feb 11 2015 Hans de Goede <hdegoede@redhat.com> - 2.3.2-20
+- xserver 1.17 ABI rebuild
+
+* Mon Aug 18 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Jun 16 2014 Hans de Goede <hdegoede@redhat.com> - 2.3.2-18
+- xserver 1.15.99.903 ABI rebuild
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Apr 28 2014 Hans de Goede <hdegoede@redhat.com> - 2.3.2-16
+- xserver 1.15.99-20140428 git snapshot ABI rebuild
+
+* Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 2.3.2-15
 - 1.15 ABI rebuild
 
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 2.3.2-13
-- Mass rebuild 2013-12-27
+* Tue Dec 17 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-14
+- 1.15RC4 ABI rebuild
+
+* Wed Nov 20 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-13
+- 1.15RC2 ABI rebuild
 
 * Wed Nov 06 2013 Adam Jackson <ajax@redhat.com> - 2.3.2-12
 - 1.15RC1 ABI rebuild
