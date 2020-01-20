@@ -1,11 +1,13 @@
-%define tarball xf86-video-vesa
-%define moduledir %(pkg-config xorg-server --variable=moduledir )
-%define driverdir	%{moduledir}/drivers
+%global tarball xf86-video-vesa
+%global moduledir %(pkg-config xorg-server --variable=moduledir )
+%global driverdir	%{moduledir}/drivers
+
+%undefine _hardened_build
 
 Summary:   Xorg X11 vesa video driver
 Name:      xorg-x11-drv-vesa
 Version:   2.3.2
-Release:   20%{?dist}
+Release:   25.1%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
@@ -51,11 +53,34 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %{driverdir}/vesa_drv.so
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Mon Feb 06 2017 Adam Jackson <ajax@redhat.com> - 2.3.2-25.1
+- Fix Requires for RHEL
+
+* Thu Sep 29 2016 Hans de Goede <hdegoede@redhat.com> - 2.3.2-25
+- Rebuild against xserver-1.19
+
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.3.2-24
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Thu Jan 28 2016 Peter Hutterer <peter.hutterer@redhat.com>
+- Remove unnecessary defattr
+
+* Wed Jan 20 2016 Peter Hutterer <peter.hutterer@redhat.com>
+- s/define/global/
+
+* Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 2.3.2-23
+- 1.15 ABI rebuild
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.2-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Mar 02 2015 Dave Airlie <airlied@redhat.com> 2.3.2-21
+- drop hardened builds for vesa
+
 * Wed Feb 11 2015 Hans de Goede <hdegoede@redhat.com> - 2.3.2-20
 - xserver 1.17 ABI rebuild
 
